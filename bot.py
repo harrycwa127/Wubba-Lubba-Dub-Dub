@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix = "/")
+bot = commands.Bot(command_prefix = "-")
 
 @bot.event
 async def on_ready():
@@ -19,7 +19,7 @@ async def on_member_remove(member):
     await channel.send(f"{member} leave!")
     print(f"{member} leave!")
 
-@bot.command
+@bot.command()
 async def ping(ctx):
     await ctx.send(bot.latency)
 
