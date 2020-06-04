@@ -42,8 +42,9 @@ async def icon(ctx):
 
 
 @bot.command()
-async def lick(ctx):
+async def lick(ctx, member):
     random_web = random.choice(jdata["lick"])
+    await ctx.send(f"{member} you licked by **{ctx.message.author.display_name}**")
     await ctx.send(random_web)
 
 bot.run(jdata["TOKEN"])
