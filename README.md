@@ -1,2 +1,2 @@
 # Wubba Lubba Dub-Dub
- A Discord Bot
+ A testing and learning Discord Bot
