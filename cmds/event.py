@@ -26,9 +26,11 @@ class Event(Cog_Extension):
     async def on_message(self, msg):
         if msg.content.endswith("hi") and msg.author != self.bot.user:
             await  msg.channel.send(f"**{msg.author.display_name}** hi")
+            print(f"**{msg.author.display_name}** hi")
 
         if msg.content.endswith("bye") and msg.author != self.bot.user:
             await  msg.channel.send(f"**{msg.author.display_name}** bye")
+            print(f"**{msg.author.display_name}** bye")
 
 def setup(bot):
     bot.add_cog(Event(bot))
