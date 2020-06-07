@@ -19,17 +19,17 @@ class React(Cog_Extension):
     async def lick(self, ctx, member=None):
         random_web = random.choice(jdata["lick"])
         if member is not None:
-            await ctx.send(f"{member} you licked by **{ctx.message.author.display_name}**")
-            print(f"{member} you licked by **{ctx.message.author.display_name}**")
+            await ctx.send(f"{member} you licked by {ctx.message.author.mention}")
+            print(f"{member} you licked by {ctx.message.author.mention}")
         else:
-            await ctx.send(f"licked by **{ctx.message.author.display_name}**")
-            print(f"licked by **{ctx.message.author.display_name}**")
+            await ctx.send(f"licked by {ctx.message.author.mention}")
+            print(f"licked by {ctx.message.author.mention}")
         await ctx.send(random_web)
 
     @commands.command()
     async def roll(self, ctx):
         ran = random.randint(0, 100)
-        await ctx.send(f"**{ctx.message.author.display_name}** roll a number from 0 to 100： {ran}")
+        await ctx.send(f"{ctx.message.author.mention} roll a number from 0 to 100： {ran}")
         print("roll", ran)
 
 

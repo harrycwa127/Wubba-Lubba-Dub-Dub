@@ -46,12 +46,6 @@ class Main(Cog_Extension):
         print(f"send: **{member}** said {msg}")
 
     @commands.command()
-    async def said_byme(self, ctx, *, msg):
-        await ctx.message.delete()
-        await ctx.send(f"**{ctx.message.author.display_name}** said {msg}")
-        print(f"send: **{ctx.message.author.display_name}** said {msg}")
-
-    @commands.command()
     async def said(self, ctx, *, msg):
         await ctx.message.delete()
         await ctx.send(msg)
