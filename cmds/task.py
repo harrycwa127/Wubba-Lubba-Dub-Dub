@@ -12,6 +12,8 @@ class Task(Cog_Extension):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.counter = True
+
         async def interval():
             await self.bot.wait_until_ready()
             self.channel = self.bot.get_channel(int(jdata["channel"]))
@@ -20,7 +22,21 @@ class Task(Cog_Extension):
                 print(f"{datetime.datetime.now()} loop: >> Wubba Lubba Dub-Dub is online <<")
                 await asyncio.sleep(3600) #sec
         
+        async def time_task():
+            await self.bot.wait_until_ready()
+            self.channel = self.bot.get_channel(int(jdata["channel"]))
+            while not self.bot.is_closed():
+                now_time = datetime.datetime.now().strftime("%H%M")
+                if now_time == jdata["time"] and self.counter == True:
+                    await self.channel.send("Reminder!!!")
+                    print(f"{datetime.datetime.now()} time_task: Reminder")
+                    self.counter = False
+                else:
+                    self.count = 0
+                await asyncio.sleep(1)
+
         self.bg_task = self.bot.loop.create_task(interval())
+        self.bg_task = self.bot.loop.create_task(time_task())
 
     @commands.command()
     async def set_channel(self, ctx, ch:int):
@@ -33,8 +49,9 @@ class Task(Cog_Extension):
     
     @commands.command()
     async def set_time(self, ctx, time):
+        self.counter = True
         jdata["time"] = time
-        with open("setting.json", "w", endcoding="utf8") as jfile:
+        with open("setting.json", "w", encoding="utf8") as jfile:
            json.dump(jdata, jfile, indent = len(jdata))
         await ctx.send(f"Set time: {time}")
         print(f"{datetime.datetime.now()} Set time: {time}")
