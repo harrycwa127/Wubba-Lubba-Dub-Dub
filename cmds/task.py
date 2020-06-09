@@ -28,7 +28,7 @@ class Task(Cog_Extension):
             while not self.bot.is_closed():
                 now_time = datetime.datetime.now().strftime("%H%M")
                 if now_time == jdata["time"] and self.counter == True:
-                    await self.channel.send("Reminder!!!")
+                    await self.channel.send(jdata["statement"])
                     print(f"{datetime.datetime.now()} time_task: Reminder")
                     self.counter = False
                 else:
@@ -37,6 +37,7 @@ class Task(Cog_Extension):
 
         self.bg_task = self.bot.loop.create_task(interval())
         self.bg_task = self.bot.loop.create_task(time_task())
+
 
     @commands.command()
     async def set_channel(self, ctx, ch:int):
@@ -48,13 +49,14 @@ class Task(Cog_Extension):
             json.dump(jdata, jfile, indent = len(jdata))
     
     @commands.command()
-    async def set_time(self, ctx, time):
+    async def alarm(self, ctx, time,*, state:str):
         self.counter = True
         jdata["time"] = time
+        jdata["statement"] = state
         with open("setting.json", "w", encoding="utf8") as jfile:
            json.dump(jdata, jfile, indent = len(jdata))
-        await ctx.send(f"Set time: {time}")
-        print(f"{datetime.datetime.now()} Set time: {time}")
+        await ctx.send(f"Set alarm: {time} {state}")
+        print(f"{datetime.datetime.now()} Set alarm: {time} {state}")
 
 def setup(bot):
     bot.add_cog(Task(bot))
