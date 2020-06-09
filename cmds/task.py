@@ -17,7 +17,7 @@ class Task(Cog_Extension):
             self.channel = self.bot.get_channel(int(jdata["channel"]))
             while not self.bot.is_closed():
                 await self.channel.send(">> Wubba Lubba Dub-Dub is online <<")
-                print("loop: >> Wubba Lubba Dub-Dub is online <<")
+                print(f"{datetime.datetime.now()} loop: >> Wubba Lubba Dub-Dub is online <<")
                 await asyncio.sleep(3600) #sec
         
         self.bg_task = self.bot.loop.create_task(interval())
@@ -25,8 +25,19 @@ class Task(Cog_Extension):
     @commands.command()
     async def set_channel(self, ctx, ch:int):
         self.channel = self.bot.get_channel(ch)
+        jdata["channel"] = ch
         await ctx.send(f"Set Channel: {self.channel.mention}")
-        print(f"Set Channel: {self.channel}")
+        print(f"{datetime.datetime.now()} Set Channel: {self.channel}")
+        with open("Setting.json", "w", encoding = "utf8")as jfile:
+            json.dump(jdata, jfile, indent = len(jdata))
+    
+    @commands.command()
+    async def set_time(self, ctx, time):
+        jdata["time"] = time
+        with open("setting.json", "w", endcoding="utf8") as jfile:
+           json.dump(jdata, jfile, indent = len(jdata))
+        await ctx.send(f"Set time: {time}")
+        print(f"{datetime.datetime.now()} Set time: {time}")
 
 def setup(bot):
     bot.add_cog(Task(bot))

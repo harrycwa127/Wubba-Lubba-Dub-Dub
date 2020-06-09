@@ -9,18 +9,18 @@ class Main(Cog_Extension):
     @commands.command()
     async def ping(self, ctx):
         await ctx.send(f"ping {round(self.bot.latency*1000)} ms")
-        print(f"ping {round(self.bot.latency*1000)} ms")
+        print(f"{datetime.datetime.now()} ping {round(self.bot.latency*1000)} ms")
 
     @commands.command()
     async def sum(self, ctx, num1: int, num2: int):
         await ctx.send(f"The sum of 2 numbers is {num1+num2}")
-        print(f"The sum of 2 numbers is {num1+num2}")
+        print(f"{datetime.datetime.now()} The sum of 2 numbers is {num1+num2}")
 
     @commands.command()
     async def dir(self, ctx):
         for filename in os.listdir("./cmds"):
             await ctx.send(filename)
-            print("send dir")
+            print(f"{datetime.datetime.now()} dir: {filename}")
 
     @commands.command()
     async def info(self, ctx):
@@ -37,24 +37,24 @@ class Main(Cog_Extension):
         )
         embed.set_thumbnail(url="https://imgur.dcard.tw/MHVEA6Rh.jpg")
         await ctx.send(embed=embed)
-        print("send info of bot")
+        print(f"{datetime.datetime.now()} send info of bot")
 
     @commands.command()
     async def said_by(self, ctx, member, *, msg):
         await ctx.message.delete()
         await ctx.send(f"**{member}** said {msg}")
-        print(f"send: **{member}** said {msg}")
+        print(f"{datetime.datetime.now()} send: **{member}** said {msg}")
 
     @commands.command()
     async def said(self, ctx, *, msg):
         await ctx.message.delete()
         await ctx.send(msg)
-        print("send:", msg)
+        print(f"{datetime.datetime.now()} send:", msg)
 
     @commands.command()
     async def del_msg(self, ctx, num: int):
         await ctx.channel.purge(limit=num+1)
-        print(f"del {num} msg ")
+        print(f"{datetime.datetime.now()} del {num} msg ")
 
 
 def setup(bot):
