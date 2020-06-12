@@ -13,7 +13,6 @@ bot = commands.Bot(command_prefix="/", description="Harry's Bot")
 
 @bot.event
 async def on_ready():
-    channel = bot.get_channel(int(jdata["channel"]))
     print(f"{datetime.datetime.now()} >> Wubba Lubba Dub-Dub is online <<")
 
 

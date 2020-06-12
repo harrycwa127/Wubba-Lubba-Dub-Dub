@@ -3,6 +3,7 @@ from discord.ext import commands
 from core.classes import Cog_Extension
 import os
 import datetime
+import random
 
 
 class Main(Cog_Extension):
@@ -10,11 +11,6 @@ class Main(Cog_Extension):
     async def ping(self, ctx):
         await ctx.send(f"ping {round(self.bot.latency*1000)} ms")
         print(f"{datetime.datetime.now()} ping {round(self.bot.latency*1000)} ms")
-
-    @commands.command()
-    async def sum(self, ctx, num1: int, num2: int):
-        await ctx.send(f"The sum of 2 numbers is {num1+num2}")
-        print(f"{datetime.datetime.now()} The sum of 2 numbers is {num1+num2}")
 
     @commands.command()
     async def dir(self, ctx):
@@ -26,7 +22,7 @@ class Main(Cog_Extension):
     async def info(self, ctx):
         embed = discord.Embed(
             title="Introduction",
-            description="This is a bot for testing amd learning",
+            description="This is a bot for testing and learning",
             color=0x04F6E6,
             timestamp=datetime.datetime.utcnow(),
         )
@@ -53,8 +49,24 @@ class Main(Cog_Extension):
 
     @commands.command()
     async def del_msg(self, ctx, num: int):
-        await ctx.channel.purge(limit=num+1)
+        await ctx.channel.purge(limit=num + 1)
         print(f"{datetime.datetime.now()} del {num} msg ")
+
+    @commands.command()
+    async def ran_squad(self, ctx):
+        online = []
+        ran_online = []
+
+        for member in ctx.guild.members:
+            if str(member.status) == "online":
+                online.append(member.name)
+
+        ran_online = random.sample(online, k=6)
+        for i in range(2):
+            temp = random.sample(ran_online, k=3)
+            await ctx.send(f"team{i+1}: {str(temp)}")
+            for j in temp:
+                ran_online.remove(j)
 
 
 def setup(bot):
