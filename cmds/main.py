@@ -12,11 +12,6 @@ class Main(Cog_Extension):
         await ctx.send(f"ping {round(self.bot.latency*1000)} ms")
         print(f"{datetime.datetime.now()} ping {round(self.bot.latency*1000)} ms")
 
-    @commands.command()
-    async def dir(self, ctx):
-        for filename in os.listdir("./cmds"):
-            await ctx.send(filename)
-            print(f"{datetime.datetime.now()} dir: {filename}")
 
     @commands.command()
     async def info(self, ctx):
