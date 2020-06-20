@@ -20,7 +20,7 @@ async def on_ready():
 async def load(ctx, extension):
     bot.load_extension(f"cmds.{extension}")
     await ctx.send(f"Loaded {extension} done.")
-    print(f"{datetime.datetime.now()()} Loaded {extension} done.")
+    print(f"{datetime.datetime.now()} Loaded {extension} done.")
     
 @bot.command()
 async def unload(ctx, extension):
