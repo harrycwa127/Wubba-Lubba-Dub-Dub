@@ -19,17 +19,17 @@ class Task(Cog_Extension):
             self.channel = self.bot.get_channel(int(jdata["channel"]))
             while not self.bot.is_closed():
                 await self.channel.send(">> Wubba Lubba Dub-Dub is online <<")
-                print(f"{datetime.datetime.now()} loop: >> Wubba Lubba Dub-Dub is online <<")
+                print(f"{datetime.datetime.utcnow()} loop: >> Wubba Lubba Dub-Dub is online <<")
                 await asyncio.sleep(3600) #sec
         
         async def time_task():
             await self.bot.wait_until_ready()
             self.channel = self.bot.get_channel(int(jdata["channel"]))
             while not self.bot.is_closed():
-                now_time = datetime.datetime.now().strftime("%H%M")
+                now_time = datetime.datetime.utcnow().strftime("%H%M")
                 if now_time == jdata["time"] and self.counter == True:
                     await self.channel.send(jdata["statement"])
-                    print(f"{datetime.datetime.now()} time_task: Reminder")
+                    print(f"{datetime.datetime.utcnow()} time_task: Reminder")
                     self.counter = False
                 else:
                     self.count = 0
@@ -44,7 +44,7 @@ class Task(Cog_Extension):
         self.channel = self.bot.get_channel(ch)
         jdata["channel"] = ch
         await ctx.send(f"Set Channel: {self.channel.mention}")
-        print(f"{datetime.datetime.now()} Set Channel: {self.channel}")
+        print(f"{datetime.datetime.utcnow()} Set Channel: {self.channel}")
         with open("Setting.json", "w", encoding = "utf8")as jfile:
             json.dump(jdata, jfile, indent = len(jdata))
     
@@ -56,7 +56,7 @@ class Task(Cog_Extension):
         with open("setting.json", "w", encoding="utf8") as jfile:
            json.dump(jdata, jfile, indent = len(jdata))
         await ctx.send(f"Set alarm: {time} {state}")
-        print(f"{datetime.datetime.now()} Set alarm: {time} {state}")
+        print(f"{datetime.datetime.utcnow()} Set alarm: {time} {state}")
 
 def setup(bot):
     bot.add_cog(Task(bot))

@@ -8,23 +8,30 @@ class Music(Cog_Extension):
     @commands.command()
     async def play(self, ctx, url:str):
         if not ctx.author.voice:
-            print(f"{datetime.datetime.now()} client is not in a voice channel!")
+            print(f"{datetime.datetime.utcnow()} client is not in a voice channel!")
             await ctx.send("you must be in a voice channel to play music")
 
         else:
-            player = discord.FFmpegPCMAudio(url)
-            if not ctx.voice_client.is_playing():
-                await ctx.voice_client.play(player, after = None)
+            pass
     
     @commands.command()
     async def join(self, ctx):
-        print(f"{datetime.datetime.now()} join voice channel {ctx.author.voice.channel.name}")
-        await ctx.author.voice.channel.connect()
+        if ctx.author.voice.channel:
+            print(f"{datetime.datetime.utcnow()} join voice channel {ctx.author.voice.channel.name}")
+            await ctx.author.voice.channel.connect()
+        else:
+            print("join voice channel fail!")
+            await ctx.send("You must in a voice channel!")
 
     @commands.command()
     async def leave(self, ctx):
-        print(f"{datetime.datetime.now()} leave voice channel {ctx.author.voice.channel.name}")
-        await ctx.voice_client.disconnect()
+        try:
+            if ctx.voice_client.is_connected():
+                print(f"{datetime.datetime.utcnow()} leave voice channel {ctx.author.voice.channel.name}")
+                await ctx.voice_client.disconnect()
+        except:
+            print(f"{datetime.datetime.utcnow()}leave channel fail!")
+            await ctx.send("I am not a channel, can't leave!")
 
 
 def setup(bot):

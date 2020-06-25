@@ -10,7 +10,7 @@ class Main(Cog_Extension):
     @commands.command()
     async def ping(self, ctx):
         await ctx.send(f"ping {round(self.bot.latency*1000)} ms")
-        print(f"{datetime.datetime.now()} ping {round(self.bot.latency*1000)} ms")
+        print(f"{datetime.datetime.utcnow()} ping {round(self.bot.latency*1000)} ms")
 
 
     @commands.command()
@@ -28,24 +28,24 @@ class Main(Cog_Extension):
         )
         embed.set_thumbnail(url="https://imgur.dcard.tw/MHVEA6Rh.jpg")
         await ctx.send(embed=embed)
-        print(f"{datetime.datetime.now()} send info of bot")
+        print(f"{datetime.datetime.utcnow()} send info of bot")
 
     @commands.command()
     async def said_by(self, ctx, member, *, msg):
         await ctx.message.delete()
         await ctx.send(f"**{member}** said {msg}")
-        print(f"{datetime.datetime.now()} send: **{member}** said {msg}")
+        print(f"{datetime.datetime.utcnow()} send: **{member}** said {msg}")
 
     @commands.command()
     async def said(self, ctx, *, msg):
         await ctx.message.delete()
         await ctx.send(msg)
-        print(f"{datetime.datetime.now()} send:", msg)
+        print(f"{datetime.datetime.utcnow()} send:", msg)
 
     @commands.command()
     async def del_msg(self, ctx, num: int):
         await ctx.channel.purge(limit=num + 1)
-        print(f"{datetime.datetime.now()} del {num} msg ")
+        print(f"{datetime.datetime.utcnow()} del {num} msg ")
 
     @commands.command()
     async def ran_squad(self, ctx):

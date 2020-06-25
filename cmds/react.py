@@ -14,24 +14,24 @@ class React(Cog_Extension):
     async def icon(self, ctx):
         pic = discord.File(jdata["icon"])
         await ctx.send(file=pic)
-        print(f"{datetime.datetime.now()} icon")
+        print(f"{datetime.datetime.utcnow()} icon")
 
     @commands.command()
     async def lick(self, ctx, member=None):
         random_web = random.choice(jdata["lick"])
         if member is not None:
             await ctx.send(f"{member} you licked by {ctx.message.author.mention}")
-            print(f"{datetime.datetime.now()} {member} you licked by {ctx.message.author.mention}")
+            print(f"{datetime.datetime.utcnow()} {member} you licked by {ctx.message.author.mention}")
         else:
             await ctx.send(f"licked by {ctx.message.author.mention}")
-            print(f"{datetime.datetime.now()} licked by {ctx.message.author.mention}")
+            print(f"{datetime.datetime.utcnow()} licked by {ctx.message.author.mention}")
         await ctx.send(random_web)
 
     @commands.command()
     async def roll(self, ctx):
         ran = random.randint(0, 100)
         await ctx.send(f"{ctx.message.author.mention} roll a number from 0 to 100： {ran}")
-        print(f"{datetime.datetime.now()} roll", ran)
+        print(f"{datetime.datetime.utcnow()} roll", ran)
 
 
 def setup(bot):
