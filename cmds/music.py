@@ -39,10 +39,15 @@ class Music(Cog_Extension):
                 voice.play(discord.FFmpegPCMAudio("song.mp3"))
                 voice.volume = 50
 
-
         else:
             await ctx.send("pls let me join a voice channel first!")
             print(f"{datetime.datetime.now()}play music fail, not in a voice channel")
+
+    @commands.command()
+    async def playhis(self, ctx):
+        voice = get(self.bot.voice_clients, guild=ctx.guild)
+        if "song.mp3" in os.listdir("./"):
+            voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
     @commands.command()
     async def join(self, ctx):
