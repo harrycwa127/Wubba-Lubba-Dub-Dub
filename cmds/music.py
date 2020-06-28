@@ -11,35 +11,39 @@ class Music(Cog_Extension):
     @commands.command()
     async def play(self, ctx, url: str):
         song_there = os.path.isfile("song.mp3")
-
-        try:
-            if song_there:
-                os.remove("song.mp3")
-        except PermissionError:
-            await ctx.send(
-                "Wait for the current playing music end or use the 'stop' command"
-            )
-
-        print(f"{datetime.datetime.now()} play music {url}")
         voice = get(self.bot.voice_clients, guild=ctx.guild)
-        ydl_opts = {
-            "format": "bestaudio/best",
-            "postprocessors": [
-                {
-                    "key": "FFmpegExtractAudio",
-                    "preferredcodec": "mp3",
-                    "preferredquality": "192",
-                }
-            ],
-        }
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([url])
-        for file in os.listdir("./"):
-            if file.endswith(".mp3"):
-                os.rename(file, "song.mp3")
-        voice.play(discord.FFmpegPCMAudio("song.mp3"))
-        voice.volume = 50
-        voice.is_playing()
+
+        if voice and voice.is_connected():
+            try:
+                if song_there:
+                    os.remove("song.mp3")
+            except PermissionError:
+                await ctx.send(
+                    "Wait for the current playing music end or use the 'stop' command"
+                )
+
+            ydl_opts = {
+                "format": "bestaudio/best",
+                "postprocessors": [
+                    {
+                        "key": "FFmpegExtractAudio",
+                        "preferredcodec": "mp3",
+                        "preferredquality": "192",
+                    }
+                ],
+            }
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([url])
+            for file in os.listdir("./"):
+                if file.endswith(".mp3"):
+                    os.rename(file, "song.mp3")
+            voice.play(discord.FFmpegPCMAudio("song.mp3"))
+            voice.volume = 50
+            voice.is_playing()
+
+        else:
+            await ctx.send("pls let me join a voice channel first!")
+            print(f"{datetime.datetime.now()}play music fail, not in a voice channel")
 
     @commands.command()
     async def join(self, ctx):
