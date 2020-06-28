@@ -44,7 +44,7 @@ class Music(Cog_Extension):
             print(f"{datetime.datetime.now()}play music fail, not in a voice channel")
 
     @commands.command()
-    async def playhis(self, ctx):
+    async def playh(self, ctx):
         voice = get(self.bot.voice_clients, guild=ctx.guild)
         if "song.mp3" in os.listdir("./"):
             voice.play(discord.FFmpegPCMAudio("song.mp3"))
