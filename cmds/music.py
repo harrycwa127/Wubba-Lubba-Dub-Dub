@@ -4,43 +4,41 @@ from core.classes import Cog_Extension
 import datetime
 import youtube_dl
 import os
+from discord.utils import get
 
 
 class Music(Cog_Extension):
     @commands.command()
-    async def play(self, ctx, url:str):
-        if not ctx.author.voice:
-            print(f"{datetime.datetime.now()} client is not in a voice channel!")
-            await ctx.send("you must be in a voice channel to play music")
+    async def play(self, ctx, url: str):
+        song_there = os.path.isfile("song.mp3")
 
-        else:
-            song_there = os.path.isfile("song.mp3")
+        try:
+            if song_there:
+                os.remove("song.mp3")
+        except PermissionError:
+            await ctx.send(
+                "Wait for the current playing music end or use the 'stop' command"
+            )
 
-            try:
-                if song_there:
-                    os.remove("song.mp3")
-
-            except PermissionError:
-                await ctx.send("Wait for the current playing music end or use the 'stop' command")
-                
-            await ctx.send("Getting everything ready, playing audio soon")
-            print("Someone wants to play music let me get that ready for them...")
-            ydl_opts = {
-                'format': 'bestaudio/best',
-                'postprocessors': [{
-                    'key': 'FFmpegExtractAudio',
-                    'preferredcodec': 'mp3',
-                    'preferredquality': '192',
-                }],
-            }
-            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                ydl.download(url)
-            for file in os.listdir("./"):
-                if file.endswith(".mp3"):
-                    os.rename(file, 'song.mp3')
-            ctx.voice_client.play(discord.FFmpegPCMAudio("song.mp3"))
-            ctx.voice_client.volume = 100
-            ctx.voice_client.is_playing()
+        print(f"{datetime.datetime.now()} play music {url}")
+        voice = get(self.bot.voice_clients, guild=ctx.guild)
+        ydl_opts = {
+            "format": "bestaudio/best",
+            "postprocessors": [
+                {
+                    "key": "FFmpegExtractAudio",
+                    "preferredcodec": "mp3",
+                    "preferredquality": "192",
+                }
+            ],
+        }
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
+        for file in os.listdir("./"):
+            if file.endswith(".mp3"):
+                os.rename(file, "song.mp3")
+        voice.play(discord.FFmpegPCMAudio("song.mp3"))
+        voice.volume = 50
 
     @commands.command()
     async def join(self, ctx):
@@ -55,13 +53,13 @@ class Music(Cog_Extension):
 
     @commands.command()
     async def leave(self, ctx):
-        try:
-            if ctx.voice_client.is_connected():
-                print(
-                    f"{datetime.datetime.now()} leave voice channel {ctx.author.voice.channel.name}"
-                )
-                await ctx.voice_client.disconnect()
-        except:
+        voice = get(self.bot.voice_clients, guild=ctx.guild)
+        if voice and voice.is_connected():
+            print(
+                f"{datetime.datetime.now()} leave voice channel {ctx.author.voice.channel.name}"
+            )
+            await ctx.voice_client.disconnect()
+        else:
             print(f"{datetime.datetime.now()}leave channel fail!")
             await ctx.send("I am not a channel, can't leave!")
 
