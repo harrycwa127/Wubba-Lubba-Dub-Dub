@@ -47,7 +47,7 @@ class Music(Cog_Extension):
                     os.rename(file, "song.mp3")
 
             voice.play(discord.FFmpegPCMAudio("song.mp3"))
-            voice.volume = 10
+            voice.volume = 5
 
     @commands.command()
     async def playh(self, ctx):
