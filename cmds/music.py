@@ -47,15 +47,23 @@ class Music(Cog_Extension):
                     os.rename(file, "song.mp3")
 
             voice.play(discord.FFmpegPCMAudio("song.mp3"))
-            voice.volume = 25
-
-        # else:
-        #     await ctx.send("pls let me join a voice channel first!")
-        #     print(f"{datetime.datetime.now()}play music fail, not in a voice channel")
+            voice.volume = 10
 
     @commands.command()
     async def playh(self, ctx):
         voice = get(self.bot.voice_clients, guild=ctx.guild)
+
+        if not voice or not voice.is_connected():
+            if ctx.author.voice.channel:
+                print(
+                    f"{datetime.datetime.now()} join voice channel {ctx.author.voice.channel.name}"
+                )
+                await ctx.author.voice.channel.connect()
+
+            else:
+                print("join voice channel fail!")
+                await ctx.send("You must in a voice channel!")
+
         if "song.mp3" in os.listdir("./") and voice and voice.is_connected():
             voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
