@@ -10,43 +10,53 @@ from discord.utils import get
 class Music(Cog_Extension):
     @commands.command()
     async def play(self, ctx, url: str):
-        song_there = os.path.isfile("song.mp3")
         voice = get(self.bot.voice_clients, guild=ctx.guild)
 
-        if voice and voice.is_connected():
-            try:
-                if song_there:
-                    os.remove("song.mp3")
-            except PermissionError:
-                await ctx.send("Wait for the current playing music end!")
+        try:
+            if os.path.isfile("song.mp3"):
+                os.remove("song.mp3")
+        except PermissionError:
+            await ctx.send("Wait for the current playing music end!")
 
-            ydl_opts = {
-                "format": "bestaudio/best",
-                "postprocessors": [
-                    {
-                        "key": "FFmpegExtractAudio",
-                        "preferredcodec": "mp3",
-                        "preferredquality": "192",
-                    }
-                ],
-            }
-            if not voice.is_playing():
-                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                    ydl.download([url])
-                for file in os.listdir("./"):
-                    if file.endswith(".mp3"):
-                        os.rename(file, "song.mp3")
-                voice.play(discord.FFmpegPCMAudio("song.mp3"))
-                voice.volume = 50
+        ydl_opts = {
+            "format": "bestaudio/best",
+            "postprocessors": [
+                {
+                    "key": "FFmpegExtractAudio",
+                    "preferredcodec": "mp3",
+                    "preferredquality": "192",
+                }
+            ],
+        }
+        if not voice or not voice.is_connected():
+            if ctx.author.voice.channel:
+                print(
+                    f"{datetime.datetime.now()} join voice channel {ctx.author.voice.channel.name}"
+                )
+                await ctx.author.voice.channel.connect()
 
-        else:
-            await ctx.send("pls let me join a voice channel first!")
-            print(f"{datetime.datetime.now()}play music fail, not in a voice channel")
+            else:
+                print("join voice channel fail!")
+                await ctx.send("You must in a voice channel!")
+
+        if not voice.is_playing():
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([url])
+            for file in os.listdir("./"):
+                if file.endswith(".mp3"):
+                    os.rename(file, "song.mp3")
+
+            voice.play(discord.FFmpegPCMAudio("song.mp3"))
+            voice.volume = 25
+
+        # else:
+        #     await ctx.send("pls let me join a voice channel first!")
+        #     print(f"{datetime.datetime.now()}play music fail, not in a voice channel")
 
     @commands.command()
     async def playh(self, ctx):
         voice = get(self.bot.voice_clients, guild=ctx.guild)
-        if "song.mp3" in os.listdir("./"):
+        if "song.mp3" in os.listdir("./") and voice and voice.is_connected():
             voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
     @commands.command()
