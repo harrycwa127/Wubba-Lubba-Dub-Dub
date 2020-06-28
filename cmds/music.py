@@ -29,7 +29,7 @@ class Music(Cog_Extension):
             ],
         }
 
-        if not(voice and voice.is_connected):
+        if not (voice and voice.is_connected):
             if ctx.author.voice.channel:
                 print(
                     f"{datetime.datetime.now()} join voice channel {ctx.author.voice.channel.name}"
@@ -38,8 +38,8 @@ class Music(Cog_Extension):
             else:
                 print("join voice channel fail!")
                 await ctx.send("You must in a voice channel!")
-        
-        if not(voice and voice.is_playing()):
+
+        if not (voice and voice.is_playing()):
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
             for file in os.listdir("./"):
