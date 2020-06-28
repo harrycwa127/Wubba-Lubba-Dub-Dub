@@ -39,15 +39,16 @@ class Music(Cog_Extension):
                 print("join voice channel fail!")
                 await ctx.send("You must in a voice channel!")
 
-        if not voice.is_playing():
-            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                ydl.download([url])
-            for file in os.listdir("./"):
-                if file.endswith(".mp3"):
-                    os.rename(file, "song.mp3")
+        if voice or voice.is_connected():
+            if not voice.is_playing():
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    ydl.download([url])
+                for file in os.listdir("./"):
+                    if file.endswith(".mp3"):
+                        os.rename(file, "song.mp3")
 
-            voice.play(discord.FFmpegPCMAudio("song.mp3"))
-            voice.volume = 5
+                voice.play(discord.FFmpegPCMAudio("song.mp3"))
+                voice.volume = 5
 
     @commands.command()
     async def playh(self, ctx):
