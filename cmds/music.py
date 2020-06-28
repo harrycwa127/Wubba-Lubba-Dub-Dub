@@ -19,7 +19,7 @@ class Music(Cog_Extension):
                     os.remove("song.mp3")
             except PermissionError:
                 await ctx.send(
-                    "Wait for the current playing music end or use the 'stop' command"
+                    "Wait for the current playing music end!"
                 )
 
             ydl_opts = {
@@ -38,7 +38,7 @@ class Music(Cog_Extension):
                 if file.endswith(".mp3"):
                     os.rename(file, "song.mp3")
             voice.play(discord.FFmpegPCMAudio("song.mp3"))
-            voice.volume = 50
+            voice.volume = 75
             voice.is_playing()
 
         else:
