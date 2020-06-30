@@ -7,6 +7,7 @@ import youtube_dl
 import os
 import asyncio
 
+
 class Music(Cog_Extension):
     @commands.command()
     async def play(self, ctx, url: str):
@@ -41,7 +42,9 @@ class Music(Cog_Extension):
                 voice.volume = 5
         else:
             await ctx.send("Pls let me join a channel!")
-            print(f"{datetime.datetime.now()} play music fail, still not join a voice channel")
+            print(
+                f"{datetime.datetime.now()} play music fail, still not join a voice channel"
+            )
 
     @commands.command()
     async def stop(self, ctx):
@@ -91,7 +94,9 @@ class Music(Cog_Extension):
                 f"{datetime.datetime.now()} join voice channel {ctx.author.voice.channel.name}"
             )
             await ctx.author.voice.channel.connect()
-            print(f"{datetime.datetime.now()} join voice channel {ctx.author.voice.channel.name}")
+            print(
+                f"{datetime.datetime.now()} join voice channel {ctx.author.voice.channel.name}"
+            )
         else:
             print("join voice channel fail!")
             await ctx.send("You must in a voice channel!")
@@ -104,7 +109,9 @@ class Music(Cog_Extension):
                 f"{datetime.datetime.now()} leave voice channel {ctx.author.voice.channel.name}"
             )
             await ctx.voice_client.disconnect()
-            print(f"{datetime.datetime.now()} leave voice channel {ctx.author.voice.channel.name}")
+            print(
+                f"{datetime.datetime.now()} leave voice channel {ctx.author.voice.channel.name}"
+            )
         else:
             print(f"{datetime.datetime.now()}leave channel fail!")
             await ctx.send("I am not a channel, can't leave!")
