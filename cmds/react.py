@@ -33,7 +33,7 @@ class React(Cog_Extension):
     async def roll(self, ctx):
         ran = random.randint(0, 100)
         await ctx.send(
-            f"{ctx.message.author.mention} roll a number from 0 to 100： {ran}"
+            f"Roll a number from 0 to 100： {ran}"
         )
         print(f"{datetime.datetime.now()} roll", ran)
 
