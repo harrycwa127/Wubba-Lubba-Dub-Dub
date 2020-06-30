@@ -5,7 +5,6 @@ from core.classes import Cog_Extension
 import datetime
 import youtube_dl
 import os
-import asyncio
 
 
 class Music(Cog_Extension):
