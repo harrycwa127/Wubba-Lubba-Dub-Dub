@@ -40,8 +40,26 @@ class Music(Cog_Extension):
                 voice.play(discord.FFmpegPCMAudio("song.mp3"))
                 voice.volume = 5
         else:
-            await ctx.send("pls let me join a channel!")
+            await ctx.send("Pls let me join a channel!")
             print(f"{datetime.datetime.now()} play music fail, still not join a voice channel")
+
+    @commands.command()
+    async def stop(self, ctx):
+        voice = get(self.bot.voice_clients, guild=ctx.guild)
+        if voice and voice.is_connected() and voice.is_playing():
+            voice.stop()
+        else:
+            await ctx.send("Stop playing music!")
+            print(f"{datetime.datetime.now()} stop playing music")
+
+    @commands.command()
+    async def pause(self, ctx):
+        voice = get(self.bot.voice_clients, guild=ctx.guild)
+        if voice and voice.is_connected() and voice.is_playing():
+            voice.pause()
+        else:
+            await ctx.send("Pause music!")
+            print(f"{datetime.datetime.now()} pause music")
 
     @commands.command()
     async def playh(self, ctx):
