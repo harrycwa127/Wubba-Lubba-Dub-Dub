@@ -48,18 +48,33 @@ class Music(Cog_Extension):
         voice = get(self.bot.voice_clients, guild=ctx.guild)
         if voice and voice.is_connected() and voice.is_playing():
             voice.stop()
-        else:
             await ctx.send("Stop playing music!")
             print(f"{datetime.datetime.now()} stop playing music")
+        else:
+            await ctx.send("Stop playing music fail!")
+            print(f"{datetime.datetime.now()} stop playing music fail")
 
     @commands.command()
     async def pause(self, ctx):
         voice = get(self.bot.voice_clients, guild=ctx.guild)
         if voice and voice.is_connected() and voice.is_playing():
             voice.pause()
-        else:
             await ctx.send("Pause music!")
             print(f"{datetime.datetime.now()} pause music")
+        else:
+            await ctx.send("Pause music fail!")
+            print(f"{datetime.datetime.now()} pause music fail")
+
+    @commands.command()
+    async def resume(self, ctx):
+        voice = get(self.bot.voice_clients, guild=ctx.guild)
+        if voice and voice.is_connected() and voice.is_paused():
+            voice.resume()
+            await ctx.send("Resume paused music!")
+            print(f"{datetime.datetime.now()} resume paused music")
+        else:
+            await ctx.send("Resume paused music fail!")
+            print(f"{datetime.datetime.now()} resume paused music fail")
 
     @commands.command()
     async def playh(self, ctx):
