@@ -8,6 +8,7 @@ import datetime
 with open("setting.json", mode="r", encoding="utf8") as jfile:
     jdata = json.load(jfile)
 
+
 class Task(Cog_Extension):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -19,9 +20,11 @@ class Task(Cog_Extension):
             self.channel = self.bot.get_channel(int(jdata["channel"]))
             while not self.bot.is_closed():
                 await self.channel.send(">> Wubba Lubba Dub-Dub is online <<")
-                print(f"{datetime.datetime.utcnow()} loop: >> Wubba Lubba Dub-Dub is online <<")
-                await asyncio.sleep(3600) #sec
-        
+                print(
+                    f"{datetime.datetime.utcnow()} loop: >> Wubba Lubba Dub-Dub is online <<"
+                )
+                await asyncio.sleep(3600)  # sec
+
         async def time_task():
             await self.bot.wait_until_ready()
             self.channel = self.bot.get_channel(int(jdata["channel"]))
@@ -38,25 +41,25 @@ class Task(Cog_Extension):
         self.bg_task = self.bot.loop.create_task(interval())
         self.bg_task = self.bot.loop.create_task(time_task())
 
-
     @commands.command()
-    async def set_channel(self, ctx, ch:int):
+    async def set_channel(self, ctx, ch: int):
         self.channel = self.bot.get_channel(ch)
         jdata["channel"] = ch
         await ctx.send(f"Set Channel: {self.channel.mention}")
         print(f"{datetime.datetime.utcnow()} Set Channel: {self.channel}")
-        with open("Setting.json", "w", encoding = "utf8")as jfile:
-            json.dump(jdata, jfile, indent = len(jdata))
-    
+        with open("Setting.json", "w", encoding="utf8") as jfile:
+            json.dump(jdata, jfile, indent=len(jdata))
+
     @commands.command()
-    async def alarm(self, ctx, time,*, state:str):
+    async def alarm(self, ctx, time, *, state: str):
         self.counter = True
         jdata["time"] = time
         jdata["statement"] = state
         with open("setting.json", "w", encoding="utf8") as jfile:
-           json.dump(jdata, jfile, indent = len(jdata))
+            json.dump(jdata, jfile, indent=len(jdata))
         await ctx.send(f"Set alarm: {time} {state}")
         print(f"{datetime.datetime.utcnow()} Set alarm: {time} {state}")
+
 
 def setup(bot):
     bot.add_cog(Task(bot))

@@ -21,7 +21,9 @@ class React(Cog_Extension):
         random_web = random.choice(jdata["lick"])
         if member is not None:
             await ctx.send(f"{member} you licked by {ctx.message.author.mention}")
-            print(f"{datetime.datetime.now()} {member} you licked by {ctx.message.author.mention}")
+            print(
+                f"{datetime.datetime.now()} {member} you licked by {ctx.message.author.mention}"
+            )
         else:
             await ctx.send(f"licked by {ctx.message.author.mention}")
             print(f"{datetime.datetime.now()} licked by {ctx.message.author.mention}")
@@ -30,7 +32,9 @@ class React(Cog_Extension):
     @commands.command()
     async def roll(self, ctx):
         ran = random.randint(0, 100)
-        await ctx.send(f"{ctx.message.author.mention} roll a number from 0 to 100： {ran}")
+        await ctx.send(
+            f"{ctx.message.author.mention} roll a number from 0 to 100： {ran}"
+        )
         print(f"{datetime.datetime.now()} roll", ran)
 
 

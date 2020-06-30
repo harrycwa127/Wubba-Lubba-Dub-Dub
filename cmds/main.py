@@ -12,7 +12,6 @@ class Main(Cog_Extension):
         await ctx.send(f"ping {round(self.bot.latency*1000)} ms")
         print(f"{datetime.datetime.utcnow()} ping {round(self.bot.latency*1000)} ms")
 
-
     @commands.command()
     async def info(self, ctx):
         embed = discord.Embed(
