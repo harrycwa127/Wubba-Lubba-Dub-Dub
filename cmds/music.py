@@ -6,7 +6,7 @@ import datetime
 import youtube_dl
 import os
 
-
+player = []
 class Music(Cog_Extension):
     @commands.command()
     async def play(self, ctx, url: str):
@@ -19,7 +19,7 @@ class Music(Cog_Extension):
             except PermissionError:
                 await ctx.send("Wait for the current playing music end!")
 
-            ydl_opts = {
+            ytdl_opts = {
                 "format": "bestaudio/best",
                 "postprocessors": [
                     {
@@ -31,7 +31,7 @@ class Music(Cog_Extension):
             }
 
             if not (voice and voice.is_playing()):
-                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                with youtube_dl.YoutubeDL(ytdl_opts) as ydl:
                     ydl.download([url])
                 for file in os.listdir("./"):
                     if file.endswith(".mp3"):

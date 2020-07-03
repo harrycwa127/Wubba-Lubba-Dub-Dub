@@ -31,6 +31,10 @@ class Event(Cog_Extension):
             await msg.channel.send(f"{msg.author.mention} bye")
             print(f"{datetime.datetime.now()} {msg.author.mention} bye")
 
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        ctx.send(error)
+        print(f"{datetime.datetime.now()} error: {error}")
 
 def setup(bot):
     bot.add_cog(Event(bot))
