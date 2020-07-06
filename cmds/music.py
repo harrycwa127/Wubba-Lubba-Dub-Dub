@@ -6,7 +6,7 @@ import datetime
 import youtube_dl
 import os
 
-player = []
+
 class Music(Cog_Extension):
     @commands.command()
     async def play(self, ctx, url: str):
