@@ -34,7 +34,7 @@ class Event(Cog_Extension):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        if not hasattr(ctx.commands, "on_error"):
+        if not hasattr(ctx, "on_error"):
 
             if isinstance(error, commands.errors.MissingRequiredArgument):
                 await ctx.send("Missing argument(s)")
