@@ -17,8 +17,8 @@ class Task(Cog_Extension):
 
         @commands.Cog.listener()
         async def on_ready():
-            channel = self.bot.get_channel(int(jdata["channel"]))
-            await channel.send(">> Wubba Lubba Dub-Dub is online <<")
+            self.channel = self.bot.get_channel(int(jdata["channel"]))
+            await self.channel.send(">> Wubba Lubba Dub-Dub is online <<")
 
         # async def interval():
         #     await self.bot.wait_until_ready()

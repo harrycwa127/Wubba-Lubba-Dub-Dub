@@ -45,7 +45,7 @@ class Game(Cog_Extension):
 
     @commands.command()
     async def w(self, ctx):
-        if self.char_ran_cor > 6 and not(self.char_ran_cor-7 == self.ball_ran_cor and self.ball_ran_cor < 7 ):
+        if self.char_ran_cor > 6 and not(self.char_ran_cor-7 == self.ball_ran_cor and self.ball_ran_cor < 7) and self.char_ran_cor-7 != self.targ_ran_cor:
             self.game_map[self.char_ran_cor] = ":white_large_square:"
             self.game_map[self.char_ran_cor-7] = ":smiley:"
             self.char_ran_cor -= 7
@@ -54,20 +54,11 @@ class Game(Cog_Extension):
             self.game_map[self.ball_ran_cor-7] = ":basketball:"
             self.ball_ran_cor -= 7
 
-        await ctx.send(f"{':red_square:'*9}")
-
-        for i in range(4):
-            game_row = ":red_square:"
-            for j in range(7):
-                game_row = game_row + Game.game_map[(i*7)+j]
-            game_row = game_row+":red_square:"
-            await ctx.send(game_row)
-
-        await ctx.send(f"{':red_square:'*9}")
+        self.print_game()
     
     @commands.command()
     async def a(self, ctx):
-        if self.char_ran_cor%7 != 0 and not(self.char_ran_cor-1 == self.ball_ran_cor and self.ball_ran_cor % 7 == 0):
+        if self.char_ran_cor%7 != 0 and not(self.char_ran_cor-1 == self.ball_ran_cor and self.ball_ran_cor % 7 == 0) and self.char_ran_cor-1 != self.targ_ran_cor:
             self.game_map[self.char_ran_cor] = ":white_large_square:"
             self.game_map[self.char_ran_cor-1] = ":smiley:"
             self.char_ran_cor -= 1
@@ -76,52 +67,39 @@ class Game(Cog_Extension):
             self.game_map[self.ball_ran_cor-1] = ":basketball:"
             self.ball_ran_cor -= 1
 
-        await ctx.send(f"{':red_square:'*9}")
-
-        for i in range(4):
-            game_row = ":red_square:"
-            for j in range(7):
-                game_row = game_row + Game.game_map[(i*7)+j]
-            game_row = game_row+":red_square:"
-            await ctx.send(game_row)
-
-        await ctx.send(f"{':red_square:'*9}")
+        self.print_game()
         
     @commands.command()
     async def s(self, ctx):
-        if self.char_ran_cor < 21 and not(self.char_ran_cor+7 == self.ball_ran_cor and self.ball_ran_cor > 20):
+        if self.char_ran_cor < 21 and not(self.char_ran_cor+7 == self.ball_ran_cor and self.ball_ran_cor > 20) and self.char_ran_cor+7 != self.targ_ran_cor:
             self.game_map[self.char_ran_cor] = ":white_large_square:"
-            self.game_map[self.char_ran_cor-1] = ":smiley:"
+            self.game_map[self.char_ran_cor+7] = ":smiley:"
             self.char_ran_cor += 7
 
         if self.char_ran_cor == self.ball_ran_cor:
-            self.game_map[self.ball_ran_cor-1] = ":basketball:"
+            self.game_map[self.ball_ran_cor+7] = ":basketball:"
             self.ball_ran_cor += 7
 
-        await ctx.send(f"{':red_square:'*9}")
-
-        for i in range(4):
-            game_row = ":red_square:"
-            for j in range(7):
-                game_row = game_row + Game.game_map[(i*7)+j]
-            game_row = game_row+":red_square:"
-            await ctx.send(game_row)
-
-        await ctx.send(f"{':red_square:'*9}")
+        self.print_game()
 
     @commands.command()
     async def d(self, ctx):
-        if self.char_ran_cor%7 != 1 and not(self.char_ran_cor-1 == self.ball_ran_cor and self.ball_ran_cor % 7 == 6):
+        if self.char_ran_cor%7 != 1 and not(self.char_ran_cor-1 == self.ball_ran_cor and self.ball_ran_cor % 7 == 6) and self.char_ran_cor+1 != self.targ_ran_cor:
             self.game_map[self.char_ran_cor] = ":white_large_square:"
-            self.game_map[self.char_ran_cor-1] = ":smiley:"
+            self.game_map[self.char_ran_cor+1] = ":smiley:"
             self.char_ran_cor += 1
 
         if self.char_ran_cor == self.ball_ran_cor:
-            self.game_map[self.ball_ran_cor-1] = ":basketball:"
+            self.game_map[self.ball_ran_cor+1] = ":basketball:"
             self.ball_ran_cor += 1
 
         await ctx.send(f"{':red_square:'*9}")
 
+        self.print_game()
+
+    async def print_game(self):
+        await ctx.send(f"{':red_square:'*9}")
+
         for i in range(4):
             game_row = ":red_square:"
             for j in range(7):
@@ -130,7 +108,6 @@ class Game(Cog_Extension):
             await ctx.send(game_row)
 
         await ctx.send(f"{':red_square:'*9}")
-
 
 def setup(bot):
     bot.add_cog(Game(bot))
