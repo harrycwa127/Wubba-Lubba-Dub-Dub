@@ -15,31 +15,36 @@ class Task(Cog_Extension):
 
         self.counter = True
 
-        async def interval():
-            await self.bot.wait_until_ready()
-            self.channel = self.bot.get_channel(int(jdata["channel"]))
-            while not self.bot.is_closed():
-                await self.channel.send(">> Wubba Lubba Dub-Dub is online <<")
-                print(
-                    f"{datetime.datetime.utcnow()} loop: >> Wubba Lubba Dub-Dub is online <<"
-                )
-                await asyncio.sleep(3600)  # sec
+        @commands.Cog.listener()
+        async def on_ready():
+            channel = self.bot.get_channel(int(jdata["channel"]))
+            await channel.send(">> Wubba Lubba Dub-Dub is online <<")
 
-        async def time_task():
-            await self.bot.wait_until_ready()
-            self.channel = self.bot.get_channel(int(jdata["channel"]))
-            while not self.bot.is_closed():
-                now_time = datetime.datetime.utcnow().strftime("%H%M")
-                if now_time == jdata["time"] and self.counter == True:
-                    await self.channel.send(jdata["statement"])
-                    print(f"{datetime.datetime.utcnow()} time_task: Reminder")
-                    self.counter = False
-                else:
-                    self.count = 0
-                await asyncio.sleep(1)
+        # async def interval():
+        #     await self.bot.wait_until_ready()
+        #     self.channel = self.bot.get_channel(int(jdata["channel"]))
+        #     while not self.bot.is_closed():
+        #         await self.channel.send(">> Wubba Lubba Dub-Dub is online <<")
+        #         print(
+        #             f"{datetime.datetime.utcnow()} loop: >> Wubba Lubba Dub-Dub is online <<"
+        #         )
+        #         await asyncio.sleep(3600)  # sec
 
-        self.bg_task = self.bot.loop.create_task(interval())
-        self.bg_task = self.bot.loop.create_task(time_task())
+        # async def time_task():
+        #     await self.bot.wait_until_ready()
+        #     self.channel = self.bot.get_channel(int(jdata["channel"]))
+        #     while not self.bot.is_closed():
+        #         now_time = datetime.datetime.utcnow().strftime("%H%M")
+        #         if now_time == jdata["time"] and self.counter == True:
+        #             await self.channel.send(jdata["statement"])
+        #             print(f"{datetime.datetime.utcnow()} time_task: Reminder")
+        #             self.counter = False
+        #         else:
+        #             self.count = 0
+        #         await asyncio.sleep(1)
+
+        # self.bg_task = self.bot.loop.create_task(interval())
+        # self.bg_task = self.bot.loop.create_task(time_task())
 
     @commands.command()
     async def set_channel(self, ctx, ch: int):

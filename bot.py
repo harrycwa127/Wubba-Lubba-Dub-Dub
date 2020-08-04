@@ -8,7 +8,7 @@ import datetime
 with open("setting.json", mode="r", encoding="utf8") as jfile:
     jdata = json.load(jfile)
 
-bot = commands.Bot(command_prefix="/", description="Harry's Bot")
+bot = commands.Bot(command_prefix=".", description="Harry's Bot")
 
 
 @bot.event
