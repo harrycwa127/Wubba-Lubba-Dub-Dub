@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
 from core.classes import Cog_Extension
-import random
+from random import randrange
+from asyncio import run
 
 class Game(Cog_Extension):
     game_map = []
@@ -13,13 +14,13 @@ class Game(Cog_Extension):
     async def game(self, ctx):
         self.game_map.clear() 
 
-        self.char_ran_cor = random.randrange(0, 28)
-        self.ball_ran_cor = random.randrange(8, 20)
-        self.targ_ran_cor = random.randrange(0, 28)
+        self.char_ran_cor = randrange(0, 28)
+        self.ball_ran_cor = randrange(8, 20)
+        self.targ_ran_cor = randrange(0, 28)
         while self.ball_ran_cor == self.char_ran_cor or (self.ball_ran_cor) % 7 == 0 or (self.ball_ran_cor) % 7 == 6:
-            self.ball_ran_cor = random.randrange(8, 20)
+            self.ball_ran_cor = randrange(8, 20)
         while self.targ_ran_cor == self.char_ran_cor or self.targ_ran_cor == self.ball_ran_cor:
-            self.targ_ran_cor = random.randrange(0, 28)
+            self.targ_ran_cor = randrange(0, 28)
 
         for i in range(28):
             if i == self.char_ran_cor and i != self.ball_ran_cor and i != self.targ_ran_cor:
@@ -31,16 +32,7 @@ class Game(Cog_Extension):
             else:
                 self.game_map.append(":white_large_square:")
 
-        await ctx.send(f"{':red_square:'*9}")
-
-        for i in range(4):
-            game_row = ":red_square:"
-            for j in range(7):
-                game_row = game_row + Game.game_map[(i*7)+j]
-            game_row = game_row+":red_square:"
-            await ctx.send(game_row)
-
-        await ctx.send(f"{':red_square:'*9}")
+        await self.print_game(ctx)
             
 
     @commands.command()
@@ -54,7 +46,7 @@ class Game(Cog_Extension):
             self.game_map[self.ball_ran_cor-7] = ":basketball:"
             self.ball_ran_cor -= 7
 
-        self.print_game()
+        await self.print_game(ctx)
     
     @commands.command()
     async def a(self, ctx):
@@ -67,7 +59,7 @@ class Game(Cog_Extension):
             self.game_map[self.ball_ran_cor-1] = ":basketball:"
             self.ball_ran_cor -= 1
 
-        self.print_game()
+        await self.print_game(ctx)
         
     @commands.command()
     async def s(self, ctx):
@@ -80,11 +72,11 @@ class Game(Cog_Extension):
             self.game_map[self.ball_ran_cor+7] = ":basketball:"
             self.ball_ran_cor += 7
 
-        self.print_game()
+        await self.print_game(ctx)
 
     @commands.command()
     async def d(self, ctx):
-        if self.char_ran_cor%7 != 1 and not(self.char_ran_cor-1 == self.ball_ran_cor and self.ball_ran_cor % 7 == 6) and self.char_ran_cor+1 != self.targ_ran_cor:
+        if self.char_ran_cor%7 != 6 and not(self.char_ran_cor+1 == self.ball_ran_cor and self.ball_ran_cor % 7 == 6) and self.char_ran_cor+1 != self.targ_ran_cor:
             self.game_map[self.char_ran_cor] = ":white_large_square:"
             self.game_map[self.char_ran_cor+1] = ":smiley:"
             self.char_ran_cor += 1
@@ -92,22 +84,27 @@ class Game(Cog_Extension):
         if self.char_ran_cor == self.ball_ran_cor:
             self.game_map[self.ball_ran_cor+1] = ":basketball:"
             self.ball_ran_cor += 1
+        
+        await self.print_game(ctx)
 
-        await ctx.send(f"{':red_square:'*9}")
+    async def print_game(self, ctx):
+        if self.ball_ran_cor == self.targ_ran_cor:
+            self.game_map[self.targ_ran_cor] = ":rosette:"
 
-        self.print_game()
-
-    async def print_game(self):
-        await ctx.send(f"{':red_square:'*9}")
-
+        game_row = ":red_square:"*9 + "\n"
         for i in range(4):
-            game_row = ":red_square:"
+            game_row += ":red_square:"
             for j in range(7):
                 game_row = game_row + Game.game_map[(i*7)+j]
-            game_row = game_row+":red_square:"
-            await ctx.send(game_row)
+            game_row = game_row+":red_square:\n"
+            
+        game_row += ":red_square:"*9
+        embed = discord.Embed(title="Level 1", description = game_row, color = 0x00e1ff)
+        await ctx.send(embed=embed)
 
-        await ctx.send(f"{':red_square:'*9}")
+        if self.ball_ran_cor == self.targ_ran_cor:
+            await ctx.send("Congratulations! you win level 1\nType the game command to restart the game")
+        
 
-def setup(bot):
+def setup(bot): 
     bot.add_cog(Game(bot))
