@@ -13,6 +13,12 @@ class Game(Cog_Extension):
     targ_ran_cor = []
     cell_col = 0
     cell_num = 0
+    bg = ":fog:"
+    ball = ":basketball:"
+    frame = ":red_square:"
+    player = ":smiley:"
+    targ = ":nazar_amulet:"
+    targ_fin = ":rosette:"
 
 
     @commands.command()
@@ -47,13 +53,13 @@ class Game(Cog_Extension):
 
         for i in range(self.cell_num):
             if i == self.char_ran_cor:
-                self.game_map.append(":smiley:")
+                self.game_map.append(self.player)
             elif i in self.ball_ran_cor:
-                self.game_map.append(":basketball:")
+                self.game_map.append(self.ball)
             elif i in self.targ_ran_cor:
-                self.game_map.append(":nazar_amulet:")
+                self.game_map.append(self.targ)
             else:
-                self.game_map.append(":white_large_square:")
+                self.game_map.append(self.bg)
 
         await self.print_game(ctx)
 
@@ -68,14 +74,14 @@ class Game(Cog_Extension):
             )
             and not (self.char_ran_cor - self.cell_col) in self.targ_ran_cor
         ):
-            self.game_map[self.char_ran_cor] = ":white_large_square:"
-            self.game_map[self.char_ran_cor - self.cell_col] = ":smiley:"
+            self.game_map[self.char_ran_cor] = self.bg
+            self.game_map[self.char_ran_cor - self.cell_col] = self.player
             self.char_ran_cor -= self.cell_col
 
         if self.char_ran_cor in self.ball_ran_cor:
             self.game_map[
                 self.char_ran_cor - self.cell_col
-            ] = ":basketball:"
+            ] = self.ball
             self.ball_ran_cor[self.ball_ran_cor.index(self.char_ran_cor)] -= self.cell_col
             await self.detect_targ(self.char_ran_cor - self.cell_col)
 
@@ -92,12 +98,12 @@ class Game(Cog_Extension):
             )
             and not (self.char_ran_cor - 1) in self.targ_ran_cor
         ):
-            self.game_map[self.char_ran_cor] = ":white_large_square:"
-            self.game_map[self.char_ran_cor - 1] = ":smiley:"
+            self.game_map[self.char_ran_cor] = self.bg
+            self.game_map[self.char_ran_cor - 1] = self.player
             self.char_ran_cor -= 1
 
         if self.char_ran_cor in self.ball_ran_cor:
-            self.game_map[self.char_ran_cor - 1] = ":basketball:"
+            self.game_map[self.char_ran_cor - 1] = self.ball
             self.ball_ran_cor[self.ball_ran_cor.index(self.char_ran_cor)] -= 1
             await self.detect_targ(self.char_ran_cor - 1)
 
@@ -114,14 +120,14 @@ class Game(Cog_Extension):
             )
             and not (self.char_ran_cor + self.cell_col) in self.targ_ran_cor
         ):
-            self.game_map[self.char_ran_cor] = ":white_large_square:"
-            self.game_map[self.char_ran_cor + self.cell_col] = ":smiley:"
+            self.game_map[self.char_ran_cor] = self.bg
+            self.game_map[self.char_ran_cor + self.cell_col] = self.player
             self.char_ran_cor += self.cell_col
 
         if self.char_ran_cor in self.ball_ran_cor:
             self.game_map[
                 self.char_ran_cor + self.cell_col
-            ] = ":basketball:"
+            ] = self.ball
             self.ball_ran_cor[self.ball_ran_cor.index(self.char_ran_cor)] += self.cell_col
             await self.detect_targ(self.char_ran_cor + self.cell_col)
 
@@ -138,12 +144,12 @@ class Game(Cog_Extension):
             )
             and not (self.char_ran_cor + 1) in self.targ_ran_cor
         ):
-            self.game_map[self.char_ran_cor] = ":white_large_square:"
-            self.game_map[self.char_ran_cor + 1] = ":smiley:"
+            self.game_map[self.char_ran_cor] = self.bg
+            self.game_map[self.char_ran_cor + 1] = self.player
             self.char_ran_cor += 1
 
         if self.char_ran_cor in self.ball_ran_cor:
-            self.game_map[self.char_ran_cor + 1] = ":basketball:"
+            self.game_map[self.char_ran_cor + 1] = self.ball
             self.ball_ran_cor[self.ball_ran_cor.index(self.char_ran_cor)] += 1
             await self.detect_targ(self.char_ran_cor + 1) 
 
@@ -152,7 +158,7 @@ class Game(Cog_Extension):
 
     async def detect_targ(self, ball):
         if ball in self.targ_ran_cor:
-            self.game_map[ball] = ":rosette:"
+            self.game_map[ball] = self.targ_fin
 
     
     @commands.command()
@@ -163,19 +169,23 @@ class Game(Cog_Extension):
     
 
     @commands.command()
-    async def set_lv(self, ctx, lv):
-        self.lv = lv
-        await self.game(ctx)
-        print(f"{datetime.datetime.now()} set level to lv{lv}")
+    async def set_lv(self, ctx, lv:int):
+        if lv < 8:
+            self.lv = lv
+            await self.game(ctx)
+            print(f"{datetime.datetime.now()} set level to lv{lv}")
+        else:
+            await ctx.send("The maximum level of the game is 7")
 
 
+    @commands.command()
     async def print_game(self, ctx):
-        game_row = ":red_square:" * (8 + self.lv) + "\n"
+        game_row = self.frame * (8 + self.lv) + "\n"
         for i in range(3 + self.lv):
-            game_row += ":red_square:"
+            game_row += self.frame
             for j in range(6 + self.lv):
                 game_row = game_row + self.game_map[i * (6 + self.lv) + j]
-            game_row += ":red_square:\n"
+            game_row += self.frame + "\n"
 
         game_row += ":red_square:" * (8 + self.lv)
         embed = discord.Embed(
@@ -184,7 +194,7 @@ class Game(Cog_Extension):
 
         win = True
         for j in self.targ_ran_cor:
-            if self.game_map[j] != ":rosette:":
+            if self.game_map[j] != self.targ_fin:
                 win = False
         if win:
             embed.add_field(name=f"Congratulations! you win level {self.lv}", value="Type the game command to restart the game in same level, type reset command to reset level")
@@ -192,8 +202,12 @@ class Game(Cog_Extension):
         await ctx.send(embed=embed)
 
         if win:
-            self.lv += 1
+            if self.lv < 7:
+                self.lv += 1
+                await ctx.send("The maximum level of the game is 7")
+
             await self.game(ctx)
+        
 
 
 
