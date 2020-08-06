@@ -13,6 +13,7 @@ class Game(Cog_Extension):
     cell_col = 6 + lv
     cell_num = cell_col * (3 + lv)
 
+
     @commands.command()
     async def game(self, ctx):
         self.game_map.clear()
@@ -40,22 +41,18 @@ class Game(Cog_Extension):
                 temp = randrange(0, self.cell_num)
             self.targ_ran_cor.append(temp)
 
-        self.ball_ran_cor.sort()
-        self.targ_ran_cor.sort()
-
         for i in range(self.cell_num):
             if i == self.char_ran_cor:
                 self.game_map.append(":smiley:")
-            elif len(self.ball_ran_cor) > 0 and i == self.ball_ran_cor[0]:
+            elif i in self.ball_ran_cor:
                 self.game_map.append(":basketball:")
-                del self.ball_ran_cor[0]
-            elif len(self.targ_ran_cor) > 0 and i == self.targ_ran_cor[0]:
+            elif i in self.targ_ran_cor:
                 self.game_map.append(":nazar_amulet:")
-                del self.targ_ran_cor[0]
             else:
                 self.game_map.append(":white_large_square:")
 
         await self.print_game(ctx)
+
 
     @commands.command()
     async def w(self, ctx):
@@ -75,9 +72,11 @@ class Game(Cog_Extension):
             self.game_map[
                 self.char_ran_cor - self.cell_col
             ] = ":basketball:"
-            self.ball_ran_cor -= self.cell_col
+            self.ball_ran_cor[self.ball_ran_cor.index(self.char_ran_cor)] -= self.cell_col
+            await self.detect_targ(self.char_ran_cor - self.cell_col)
 
         await self.print_game(ctx)
+
 
     @commands.command()
     async def a(self, ctx):
@@ -94,10 +93,12 @@ class Game(Cog_Extension):
             self.char_ran_cor -= 1
 
         if self.char_ran_cor in self.ball_ran_cor:
-            self.game_map[self.ball_ran_cor - 1] = ":basketball:"
-            self.ball_ran_cor -= 1
+            self.game_map[self.char_ran_cor - 1] = ":basketball:"
+            self.ball_ran_cor[self.ball_ran_cor.index(self.char_ran_cor)] -= 1
+            await self.detect_targ(self.char_ran_cor - 1)
 
         await self.print_game(ctx)
+
 
     @commands.command()
     async def s(self, ctx):
@@ -117,9 +118,11 @@ class Game(Cog_Extension):
             self.game_map[
                 self.char_ran_cor + self.cell_col
             ] = ":basketball:"
-            self.ball_ran_cor += self.cell_col
+            self.ball_ran_cor[self.ball_ran_cor.index(self.char_ran_cor)] += self.cell_col
+            await self.detect_targ(self.char_ran_cor + self.cell_col)
 
         await self.print_game(ctx)
+
 
     @commands.command()
     async def d(self, ctx):
@@ -136,17 +139,19 @@ class Game(Cog_Extension):
             self.char_ran_cor += 1
 
         if self.char_ran_cor in self.ball_ran_cor:
-            self.game_map[self.ball_ran_cor + 1] = ":basketball:"
-            self.ball_ran_cor += 1
+            self.game_map[self.char_ran_cor + 1] = ":basketball:"
+            self.ball_ran_cor[self.ball_ran_cor.index(self.char_ran_cor)] += 1
+            await self.detect_targ(self.char_ran_cor + 1) 
 
         await self.print_game(ctx)
 
+
+    async def detect_targ(self, ball):
+        if ball in self.targ_ran_cor:
+            self.game_map[ball] = ":rosette:"
+
+
     async def print_game(self, ctx):
-        win = False
-        for i in self.ball_ran_cor:
-            if i in self.targ_ran_cor:
-                self.game_map[self.targ_ran_cor.index(i)] = ":rosette:"
-                win = True
 
         game_row = ":red_square:" * (8 + self.lv) + "\n"
         for i in range(3 + self.lv):
@@ -159,12 +164,14 @@ class Game(Cog_Extension):
         embed = discord.Embed(
             title=f"Level {self.lv}", description=game_row, color=0x00E1FF
         )
-        await ctx.send(embed=embed)
 
+        win = True
+        for j in self.targ_ran_cor:
+            if self.game_map[j] != ":rosette:":
+                win = False
         if win:
-            await ctx.send(
-                f"Congratulations! you win level {self.lv}\nType the game command to restart the game"
-            )
+            embed.add_field(name=f"Congratulations! you win level {self.lv}", value="Type the game command to restart the game")
+        await ctx.send(embed=embed)
 
 
 def setup(bot):
