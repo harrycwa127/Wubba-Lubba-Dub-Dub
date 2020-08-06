@@ -150,9 +150,14 @@ class Game(Cog_Extension):
         if ball in self.targ_ran_cor:
             self.game_map[ball] = ":rosette:"
 
+    
+    @commands.command()
+    async def reset(self, ctx):
+        self.lv = 1
+        await self.game(ctx)
+
 
     async def print_game(self, ctx):
-
         game_row = ":red_square:" * (8 + self.lv) + "\n"
         for i in range(3 + self.lv):
             game_row += ":red_square:"
@@ -170,8 +175,13 @@ class Game(Cog_Extension):
             if self.game_map[j] != ":rosette:":
                 win = False
         if win:
-            embed.add_field(name=f"Congratulations! you win level {self.lv}", value="Type the game command to restart the game")
+            embed.add_field(name=f"Congratulations! you win level {self.lv}", value="Type the game command to restart the game in same level, type reset command to reset level")
         await ctx.send(embed=embed)
+
+        if win:
+            self.lv += 1
+            await self.game(ctx)
+
 
 
 def setup(bot):
