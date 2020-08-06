@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from core.classes import Cog_Extension
 from random import randrange
+import datetime
 
 
 class Game(Cog_Extension):
@@ -10,8 +11,8 @@ class Game(Cog_Extension):
     char_ran_cor = 0
     ball_ran_cor = []
     targ_ran_cor = []
-    cell_col = 6 + lv
-    cell_num = cell_col * (3 + lv)
+    cell_col = 0
+    cell_num = 0
 
 
     @commands.command()
@@ -19,6 +20,9 @@ class Game(Cog_Extension):
         self.game_map.clear()
         self.ball_ran_cor.clear()
         self.targ_ran_cor.clear()
+        self.cell_col = 6 + self.lv
+        self.cell_num = self.cell_col * (3 + self.lv)
+        print(f"{datetime.datetime.now()} start game with lv{self.lv}")
 
         self.char_ran_cor = randrange(0, self.cell_num)
         for i in range(self.lv):
@@ -155,6 +159,14 @@ class Game(Cog_Extension):
     async def reset(self, ctx):
         self.lv = 1
         await self.game(ctx)
+        print(f"{datetime.datetime.now()} reset game")
+    
+
+    @commands.command()
+    async def set_lv(self, ctx, lv):
+        self.lv = lv
+        await self.game(ctx)
+        print(f"{datetime.datetime.now()} set level to lv{lv}")
 
 
     async def print_game(self, ctx):
@@ -176,6 +188,7 @@ class Game(Cog_Extension):
                 win = False
         if win:
             embed.add_field(name=f"Congratulations! you win level {self.lv}", value="Type the game command to restart the game in same level, type reset command to reset level")
+            print(f"{datetime.datetime.now()} game pass lv{self.lv}")
         await ctx.send(embed=embed)
 
         if win:
