@@ -44,7 +44,7 @@ class Game(Cog_Extension):
                 for j in range(-1, 1, 1):
                     if (temp + i + j) in self.ball_ran_cor:
                         count_ball += 1
-                        
+
             while (
                 temp == self.char_ran_cor
                 or temp % self.cell_col == 0
