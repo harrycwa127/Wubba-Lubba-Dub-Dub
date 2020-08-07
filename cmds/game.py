@@ -3,6 +3,10 @@ from discord.ext import commands
 from core.classes import Cog_Extension
 from random import randrange
 import datetime
+import json
+
+with open("setting.json", "r", encoding="utf8") as jfile:
+    jdata = json.load(jfile)
 
 
 class Game(Cog_Extension):
@@ -64,15 +68,31 @@ class Game(Cog_Extension):
         await self.print_game(ctx)
 
 
-    @commands.command()
+    @commands.Cog.listener()
+    async def on_message(self, msg):
+        channel = self.bot.get_channel(jdata["channel"])
+        if msg.content == "w" and msg.channel == channel:
+            await self.w(channel)
+        elif msg.content == "a" and msg.channel == channel:
+            await self.a(channel)
+        elif msg.content == "s" and msg.channel == channel:
+            await self.s(channel)
+        elif msg.content == "d" and msg.channel == channel:
+            await self.d(channel)
+
+
     async def w(self, ctx):
         if (
             self.char_ran_cor >= self.cell_col
             and not (
-                (self.char_ran_cor - self.cell_col) in self.ball_ran_cor
-                and (self.char_ran_cor - self.cell_col) < self.cell_col
+                self.game_map[(self.char_ran_cor - self.cell_col)] == self.ball
+                and (
+                    (self.char_ran_cor - self.cell_col) < self.cell_col
+                    or self.game_map[(self.char_ran_cor - self.cell_col - self.cell_col)] == self.ball
+                    or self.game_map[(self.char_ran_cor - self.cell_col - self.cell_col)] == self.targ_fin
+                )
             )
-            and not (self.char_ran_cor - self.cell_col) in self.targ_ran_cor
+            and not (self.char_ran_cor - self.cell_col) in self.targ_ran_cor 
         ):
             self.game_map[self.char_ran_cor] = self.bg
             self.game_map[self.char_ran_cor - self.cell_col] = self.player
@@ -88,13 +108,16 @@ class Game(Cog_Extension):
         await self.print_game(ctx)
 
 
-    @commands.command()
     async def a(self, ctx):
         if (
             self.char_ran_cor % self.cell_col != 0
             and not (
                 (self.char_ran_cor - 1) in self.ball_ran_cor
-                and (self.char_ran_cor -1) % self.cell_col == 0
+                and(
+                    (self.char_ran_cor -1) % self.cell_col == 0
+                    or self.game_map[(self.char_ran_cor - 2)] == self.ball
+                    or self.game_map[(self.char_ran_cor - 2)] == self.targ_fin
+                ) 
             )
             and not (self.char_ran_cor - 1) in self.targ_ran_cor
         ):
@@ -110,13 +133,16 @@ class Game(Cog_Extension):
         await self.print_game(ctx)
 
 
-    @commands.command()
     async def s(self, ctx):
         if (
             self.char_ran_cor < (self.cell_num-self.cell_col)
             and not (
                 (self.char_ran_cor + self.cell_col) in self.ball_ran_cor
-                and (self.char_ran_cor + self.cell_col) >= (self.cell_num-self.cell_col)
+                and(
+                    (self.char_ran_cor + self.cell_col) >= (self.cell_num-self.cell_col)
+                    or self.game_map[(self.char_ran_cor + self.cell_col + self.cell_col)] == self.ball
+                    or self.game_map[(self.char_ran_cor + self.cell_col + self.cell_col)] == self.targ_fin 
+                ) 
             )
             and not (self.char_ran_cor + self.cell_col) in self.targ_ran_cor
         ):
@@ -134,13 +160,16 @@ class Game(Cog_Extension):
         await self.print_game(ctx)
 
 
-    @commands.command()
     async def d(self, ctx):
         if (
             self.char_ran_cor % self.cell_col != (self.cell_col-1)
             and not (
                 (self.char_ran_cor + 1) in self.ball_ran_cor
-                and (self.char_ran_cor + 1) % self.cell_col == (self.cell_col-1)
+                and(
+                    (self.char_ran_cor + 1) % self.cell_col == (self.cell_col-1)
+                    or self.game_map[(self.char_ran_cor + 2)] == self.ball
+                    or self.game_map[(self.char_ran_cor + 2)] == self.targ_fin
+                )
             )
             and not (self.char_ran_cor + 1) in self.targ_ran_cor
         ):
@@ -204,6 +233,7 @@ class Game(Cog_Extension):
         if win:
             if self.lv < 7:
                 self.lv += 1
+            else:
                 await ctx.send("The maximum level of the game is 7")
 
             await self.game(ctx)
