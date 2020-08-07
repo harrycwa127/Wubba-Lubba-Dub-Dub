@@ -215,7 +215,7 @@ class Game(Cog_Extension):
 
     @commands.command()
     async def set_lv(self, ctx, lv:int):
-        if lv < 8:
+        if lv < 8 and lv > 0:
             self.lv = lv
             await self.game(ctx)
             print(f"{datetime.datetime.now()} set level to lv{lv}")
