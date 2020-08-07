@@ -36,21 +36,37 @@ class Game(Cog_Extension):
 
         self.char_ran_cor = randrange(0, self.cell_num)
         for i in range(self.lv):
+            count_ball = 0
+            count_targ = 0
             temp = randrange((self.cell_col + 1), self.cell_num - self.cell_col - 1)
+
+            for i in range(-self.cell_col, self.cell_col, self.cell_col):
+                for j in range(-1, 1, 1):
+                    if (temp + i + j) in self.ball_ran_cor:
+                        count_ball += 1
+                        
             while (
                 temp == self.char_ran_cor
                 or temp % self.cell_col == 0
                 or temp % self.cell_col == (self.cell_col - 1)
                 or temp in self.ball_ran_cor
+                or count_ball > 2
             ):
                 temp = randrange((self.cell_col + 1), self.cell_num - self.cell_col - 1)
             self.ball_ran_cor.append(temp)
 
             temp = randrange(0, self.cell_num)
+
+            for i in range(-self.cell_col, self.cell_col, self.cell_col):
+                for j in range(-1, 1, 1):
+                    if (temp + i + j) in self.targ_ran_cor:
+                        count_targ += 1
+
             while (
                 temp == self.char_ran_cor
                 or temp in self.ball_ran_cor
                 or temp in self.targ_ran_cor
+                or count_targ > 3
             ):
                 temp = randrange(0, self.cell_num)
             self.targ_ran_cor.append(temp)

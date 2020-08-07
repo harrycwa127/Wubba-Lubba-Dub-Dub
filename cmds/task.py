@@ -21,7 +21,7 @@ class Task(Cog_Extension):
             while not self.bot.is_closed():
                 await self.channel.send(">> Wubba Lubba Dub-Dub is online <<")
                 print(
-                    f"{datetime.datetime.utcnow()} loop: >> Wubba Lubba Dub-Dub is online <<"
+                    f"{datetime.datetime.now()} loop: >> Wubba Lubba Dub-Dub is online <<"
                 )
                 await asyncio.sleep(3600)  # sec
 
