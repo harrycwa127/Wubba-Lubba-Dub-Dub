@@ -41,7 +41,7 @@ class Task(Cog_Extension):
         self.bg_task = self.bot.loop.create_task(interval())
         self.bg_task = self.bot.loop.create_task(time_task())
 
-    @commands.command()
+    @commands.command(aliases = ["sc"], description = "set the bot channel")
     async def set_channel(self, ctx, ch: int):
         self.channel = self.bot.get_channel(ch)
         jdata["channel"] = ch
@@ -50,7 +50,7 @@ class Task(Cog_Extension):
         with open("Setting.json", "w", encoding="utf8") as jfile:
             json.dump(jdata, jfile, indent=len(jdata))
 
-    @commands.command()
+    @commands.command(aliases = ["a"], description = "set a alarm")
     async def alarm(self, ctx, time, *, state: str):
         self.counter = True
         jdata["time"] = time

@@ -25,7 +25,7 @@ class Game(Cog_Extension):
     targ_fin = ":rosette:"
 
 
-    @commands.command()
+    @commands.command(aliases = ["g"], description = "start game or restart game in same level, press wasd to control")
     async def game(self, ctx):
         self.game_map.clear()
         self.ball_ran_cor.clear()
@@ -206,14 +206,14 @@ class Game(Cog_Extension):
             self.game_map[ball] = self.targ_fin
 
     
-    @commands.command()
+    @commands.command(description = "reset the level of the game")
     async def reset(self, ctx):
         self.lv = 1
         await self.game(ctx)
         print(f"{datetime.datetime.now()} reset game")
     
 
-    @commands.command()
+    @commands.command(aliases = ["sl"],description = "set the level of the game", hidden = True)
     async def set_lv(self, ctx, lv:int):
         if lv < 8 and lv > 0:
             self.lv = lv
@@ -223,7 +223,7 @@ class Game(Cog_Extension):
             await ctx.send("The maximum level of the game is 7")
 
 
-    @commands.command()
+    @commands.command(description = "print the game")
     async def print_game(self, ctx):
         game_row = self.frame * (8 + self.lv) + "\n"
         for i in range(3 + self.lv):

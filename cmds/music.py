@@ -8,7 +8,7 @@ import os
 
 
 class Music(Cog_Extension):
-    @commands.command()
+    @commands.command(aliases = ["p"], description = "play music")
     async def play(self, ctx, url: str):
         voice = get(self.bot.voice_clients, guild=ctx.guild)
             
@@ -18,6 +18,7 @@ class Music(Cog_Extension):
                     os.remove("song.mp3")
             except PermissionError:
                 await ctx.send("Wait for the current playing music end!")
+                return
 
             ytdl_opts = {
                 "format": "bestaudio/best",
@@ -46,7 +47,7 @@ class Music(Cog_Extension):
             )
 
 
-    @commands.command()
+    @commands.command(aliases = ["s"], description = "stop playing music")
     async def stop(self, ctx):
         voice = get(self.bot.voice_clients, guild=ctx.guild)
         if voice and voice.is_connected() and voice.is_playing():
@@ -57,7 +58,7 @@ class Music(Cog_Extension):
             await ctx.send("Stop playing music fail!")
             print(f"{datetime.datetime.now()} stop playing music fail")
 
-    @commands.command()
+    @commands.command(aliases = ["p"], description = "pause music")
     async def pause(self, ctx):
         voice = get(self.bot.voice_clients, guild=ctx.guild)
         if voice and voice.is_connected() and voice.is_playing():
@@ -68,7 +69,7 @@ class Music(Cog_Extension):
             await ctx.send("Pause music fail!")
             print(f"{datetime.datetime.now()} pause music fail")
 
-    @commands.command()
+    @commands.command(aliases = ["r"], description = "resume music")
     async def resume(self, ctx):
         voice = get(self.bot.voice_clients, guild=ctx.guild)
         if voice and voice.is_connected() and voice.is_paused():
@@ -79,15 +80,15 @@ class Music(Cog_Extension):
             await ctx.send("Resume paused music fail!")
             print(f"{datetime.datetime.now()} resume paused music fail")
 
-    @commands.command()
-    async def playh(self, ctx):
+    @commands.command(aliases = ["pd"], description = "stop play downloaded music")
+    async def playd(self, ctx):
         voice = get(self.bot.voice_clients, guild=ctx.guild)
 
         if "song.mp3" in os.listdir("./") and voice and voice.is_connected():
             voice.play(discord.FFmpegPCMAudio("song.mp3"))
             print(f"{datetime.datetime.now()} play past music")
 
-    @commands.command()
+    @commands.command(aliases = ["j"], description = "join voice channel")
     async def join(self, ctx):
         if ctx.author.voice.channel:
             print(
@@ -98,7 +99,7 @@ class Music(Cog_Extension):
             print("join voice channel fail!")
             await ctx.send("You must in a voice channel!")
 
-    @commands.command()
+    @commands.command(aliases = ["l"], description = "leave voice channel")
     async def leave(self, ctx):
         voice = get(self.bot.voice_clients, guild=ctx.guild)
         if voice and voice.is_connected():

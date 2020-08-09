@@ -7,12 +7,12 @@ import random
 
 
 class Main(Cog_Extension):
-    @commands.command()
+    @commands.command(aliases = ["p"], description = "print the ping of the bot")
     async def ping(self, ctx):
         await ctx.send(f"ping {round(self.bot.latency*1000)} ms")
         print(f"{datetime.datetime.utcnow()} ping {round(self.bot.latency*1000)} ms")
 
-    @commands.command()
+    @commands.command(description = "print the information of the bot")
     async def info(self, ctx):
         embed = discord.Embed(
             title="Introduction",
@@ -29,24 +29,24 @@ class Main(Cog_Extension):
         await ctx.send(embed=embed)
         print(f"{datetime.datetime.now()} send info of bot")
 
-    @commands.command()
+    @commands.command(aliases = ["sb"], description = "said a message by the bot from someone")
     async def said_by(self, ctx, member, *, msg):
         await ctx.message.delete()
         await ctx.send(f"**{member}** said {msg}")
         print(f"{datetime.datetime.now()} send: **{member}** said {msg}")
 
-    @commands.command()
+    @commands.command(aliases = ["s"], description = "said a message by the bot")
     async def said(self, ctx, *, msg):
         await ctx.message.delete()
         await ctx.send(msg)
         print(f"{datetime.datetime.now()} send:", msg)
 
-    @commands.command()
+    @commands.command(aliases = ["dm"], description = "delet message")
     async def del_msg(self, ctx, num: int):
         await ctx.channel.purge(limit=num + 1)
         print(f"{datetime.datetime.now()} del {num} msg ")
 
-    @commands.command()
+    @commands.command(aliases = ["rs"], description = "assign the member of the guild to two teams")
     async def ran_squad(self, ctx):
         online = []
         ran_online = []

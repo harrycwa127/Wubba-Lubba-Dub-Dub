@@ -10,26 +10,25 @@ with open("setting.json", mode="r", encoding="utf8") as jfile:
 
 
 class React(Cog_Extension):
-    @commands.command()
+    @commands.command(description = "print out the icon of the bot")
     async def icon(self, ctx):
         pic = discord.File(jdata["icon"])
         await ctx.send(file=pic)
         print(f"{datetime.datetime.now()} icon")
 
-    @commands.command()
+    @commands.command(description = "lick someone or lick yourself")
     async def lick(self, ctx, member=None):
         random_web = random.choice(jdata["lick"])
         if member is not None:
-            await ctx.send(f"{member} you licked by {ctx.message.author.mention}")
-            print(
-                f"{datetime.datetime.now()} {member} you licked by {ctx.message.author.mention}"
-            )
+            member = member + " you"
         else:
-            await ctx.send(f"licked by {ctx.message.author.mention}")
-            print(f"{datetime.datetime.now()} licked by {ctx.message.author.mention}")
-        await ctx.send(random_web)
+            member = ""
+        
+        await ctx.send(f"{member} you licked by {ctx.message.author.mention}")
+        print(
+            f"{datetime.datetime.now()} {member} you licked by {ctx.message.author.mention}")
 
-    @commands.command()
+    @commands.command(description = "roll a number from 0 to 100")
     async def roll(self, ctx):
         ran = random.randint(0, 100)
         await ctx.send(
