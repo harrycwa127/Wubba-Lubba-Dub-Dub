@@ -11,7 +11,7 @@ class Music(Cog_Extension):
     @commands.command()
     async def play(self, ctx, url: str):
         voice = get(self.bot.voice_clients, guild=ctx.guild)
-
+            
         if voice and voice.is_connected():
             try:
                 if os.path.isfile("song.mp3"):
@@ -37,13 +37,14 @@ class Music(Cog_Extension):
                     if file.endswith(".mp3"):
                         os.rename(file, "song.mp3")
 
-                voice.play(discord.FFmpegPCMAudio("song.mp3"))
-                voice.volume = 5
+            voice.volume = 5
+            voice.play(discord.FFmpegPCMAudio("song.mp3"))
         else:
             await ctx.send("Pls let me join a channel!")
             print(
                 f"{datetime.datetime.now()} play music fail, still not join a voice channel"
             )
+
 
     @commands.command()
     async def stop(self, ctx):
