@@ -223,7 +223,7 @@ class Game(Cog_Extension):
             await ctx.send("The maximum level of the game is 7")
 
 
-    @commands.command(description = "print the game")
+    @commands.command(aliases = ["pg"], description = "print the game")
     async def print_game(self, ctx):
         game_row = self.frame * (8 + self.lv) + "\n"
         for i in range(3 + self.lv):

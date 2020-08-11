@@ -7,7 +7,7 @@ import random
 
 
 class Main(Cog_Extension):
-    @commands.command(aliases = ["p"], description = "print the ping of the bot")
+    @commands.command(description = "print the ping of the bot")
     async def ping(self, ctx):
         await ctx.send(f"ping {round(self.bot.latency*1000)} ms")
         print(f"{datetime.datetime.utcnow()} ping {round(self.bot.latency*1000)} ms")
@@ -29,13 +29,13 @@ class Main(Cog_Extension):
         await ctx.send(embed=embed)
         print(f"{datetime.datetime.now()} send info of bot")
 
-    @commands.command(aliases = ["sb"], description = "said a message by the bot from someone")
+    @commands.command(description = "said a message by the bot from someone")
     async def said_by(self, ctx, member, *, msg):
         await ctx.message.delete()
         await ctx.send(f"**{member}** said {msg}")
         print(f"{datetime.datetime.now()} send: **{member}** said {msg}")
 
-    @commands.command(aliases = ["s"], description = "said a message by the bot")
+    @commands.command(description = "said a message by the bot")
     async def said(self, ctx, *, msg):
         await ctx.message.delete()
         await ctx.send(msg)

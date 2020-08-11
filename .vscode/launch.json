@@ -4,6 +4,7 @@
     // For further information visit https://github.com/OmniSharp/omnishar...
     "version": "0.2.0",
     "configurations": [
+        
         {
             "name": "Python: Current Dir (external)",
             "type": "python",
