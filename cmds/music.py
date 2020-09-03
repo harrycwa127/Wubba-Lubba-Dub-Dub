@@ -11,7 +11,7 @@ import shutil
 class Music(Cog_Extension):
     queues = {}
 
-    @commands.command(aliases=["p"], description="play music")
+    @commands.command(aliases=["p"], description="play music of youtube or spotify")
     async def play(self, ctx, url: str):
         def check_q():
             if os.path.isdir("./Music Queue"):
@@ -85,8 +85,12 @@ class Music(Cog_Extension):
             }
 
             if not (voice and voice.is_playing()):
-                with youtube_dl.YoutubeDL(ytdl_opts) as ydl:
-                    ydl.download([url])
+                try:
+                    with youtube_dl.YoutubeDL(ytdl_opts) as ydl:
+                        ydl.download([url])
+                except:
+                    os.system("spotdl -f " + '"' + os.path.abspath(os.path.realpath("./")) + '"' + " -s " + url)
+            
                 for file in os.listdir("./"):
                     if file.endswith(".mp3"):
                         os.rename(file, "song.mp3")
@@ -132,8 +136,12 @@ class Music(Cog_Extension):
             ],
         }
 
-        with youtube_dl.YoutubeDL(ytdl_opts) as ydl:
-            ydl.download([url])
+        try:
+            with youtube_dl.YoutubeDL(ytdl_opts) as ydl:
+                ydl.download([url])
+        except:
+            os.system(f"spotdl -f " + '"' + os.path.abspath(os.path.realpath("./Music Queue")) + f'/song{q_num}."' + "{output-ext}"  + ' -s ' + url)
+            
 
         print(f"{datetime.datetime.now()} added song {q_num} to the queue")
         await ctx.send(f"Added song {q_num} to the queue")
